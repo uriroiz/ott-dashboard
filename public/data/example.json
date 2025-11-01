@@ -1,0 +1,42 @@
+{
+  "metadata": {
+    "generatedAt": "2025-11-01T00:00:00.000Z",
+    "totalRows": 3,
+    "source": "example",
+    "version": "2.2.1",
+    "note": "This is an example file. Replace with your actual data using: npm run excel-to-json <your-file.xlsx> public/data/ott-data.json"
+  },
+  "data": [
+    {
+      "eventname": "ליגת אתנה ווינר - מכבי תל אביב נגד הפועל ירושלים",
+      "Event Date": "2025-10-08",
+      "HomeTeam": "מכבי תל אביב",
+      "AwayTeam": "הפועל ירושלים",
+      "Views": 25000,
+      "unique users": 12500,
+      "Playtime Hours": 350.5,
+      "Production Hours": 3.5
+    },
+    {
+      "eventname": "ליגת אתנה ווינר - מכבי חיפה נגד הפועל תל אביב",
+      "Event Date": "2025-10-15",
+      "HomeTeam": "מכבי חיפה",
+      "AwayTeam": "הפועל תל אביב",
+      "Views": 18000,
+      "unique users": 9000,
+      "Playtime Hours": 245.0,
+      "Production Hours": 3.5
+    },
+    {
+      "eventname": "ליגה לאומית Winner - אלסא נגד גלבוע",
+      "Event Date": "2025-10-20",
+      "HomeTeam": "אלסא",
+      "AwayTeam": "גלבוע",
+      "Views": 5000,
+      "unique users": 2500,
+      "Playtime Hours": 85.5,
+      "Production Hours": 2.5
+    }
+  ]
+}
+

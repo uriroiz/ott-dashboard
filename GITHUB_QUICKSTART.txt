@@ -1,0 +1,123 @@
+═══════════════════════════════════════════════════════════
+    🚀 GITHUB PAGES - מדריך אולטרה מהיר (3 דקות)
+═══════════════════════════════════════════════════════════
+
+📋 לפני שמתחילים:
+   1. יש לך חשבון GitHub
+   2. קובץ Excel עם הנתונים מוכן
+
+═══════════════════════════════════════════════════════════
+   צעדים
+═══════════════════════════════════════════════════════════
+
+1️⃣ המר את ה-Excel ל-JSON
+   ────────────────────────────────────────────────────────
+   npm run excel-to-json your-file.xlsx public/data/ott-data.json
+
+
+2️⃣ צור 3 קבצי .env בתיקייה:
+   ────────────────────────────────────────────────────────
+   📄 .env.development:
+      VITE_PRODUCTION_MODE=false
+
+   📄 .env.production:
+      VITE_PRODUCTION_MODE=true
+      VITE_DATA_FILE=/data/ott-data.json
+
+   📄 .env.example:
+      VITE_PRODUCTION_MODE=true
+      VITE_DATA_FILE=/data/ott-data.json
+
+
+3️⃣ בדוק מקומית
+   ────────────────────────────────────────────────────────
+   npm run dev
+   → ודא שזה עובד
+
+
+4️⃣ צור Repository ב-GitHub
+   ────────────────────────────────────────────────────────
+   → לך ל-https://github.com/new
+   → שם: ott-dashboard (או כל שם)
+   → Public/Private (לפי בחירתך)
+   → לחץ "Create repository"
+
+
+5️⃣ העלה את הקוד
+   ────────────────────────────────────────────────────────
+   git init
+   git add .
+   git commit -m "Initial commit: OTT Dashboard v2.2.1"
+   git remote add origin https://github.com/USERNAME/REPO.git
+   git push -u origin main
+
+   ⚠️ החלף USERNAME ו-REPO בשלך!
+
+
+6️⃣ הפעל GitHub Pages
+   ────────────────────────────────────────────────────────
+   → לך ל-Settings → Pages (ב-GitHub)
+   → Source: GitHub Actions
+   → שמור
+
+
+7️⃣ עדכן vite.config.js
+   ────────────────────────────────────────────────────────
+   base: '/your-repo-name/',  ← שנה לשם ה-repo שלך!
+
+   git add vite.config.js
+   git commit -m "Update base path"
+   git push
+
+
+8️⃣ המתן 2-3 דקות
+   ────────────────────────────────────────────────────────
+   → Actions → ראה שה-workflow מסתיים
+   → הדשבורד חי! 🎉
+
+
+═══════════════════════════════════════════════════════════
+   הדשבורד שלך זמין ב:
+═══════════════════════════════════════════════════════════
+
+   🌐 https://USERNAME.github.io/REPO/
+
+
+═══════════════════════════════════════════════════════════
+   עדכון נתונים (כל חודש)
+═══════════════════════════════════════════════════════════
+
+   deploy.bat new-file.xlsx
+
+   או:
+
+   npm run excel-to-json new-file.xlsx public/data/ott-data.json
+   git add public/data/ott-data.json
+   git commit -m "Update data"
+   git push
+
+
+═══════════════════════════════════════════════════════════
+   בעיות? קרא:
+═══════════════════════════════════════════════════════════
+
+   📘 GITHUB_SETUP.md - מדריך מפורט
+   📖 DEPLOYMENT.md - פתרון בעיות
+
+
+═══════════════════════════════════════════════════════════
+   עזרה מהירה:
+═══════════════════════════════════════════════════════════
+
+   404 Error?
+   → בדוק base ב-vite.config.js
+
+   אין נתונים?
+   → ודא שpublic/data/ott-data.json קיים
+
+   GitHub Actions נכשל?
+   → Actions → לחץ על הworkflow → בדוק logs
+
+
+גרסה: 2.2.1
+
