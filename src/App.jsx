@@ -18,7 +18,8 @@ import {
 
 // Check if we're in production mode (load from JSON instead of Excel)
 const PRODUCTION_MODE = import.meta.env.VITE_PRODUCTION_MODE === 'true';
-const DATA_FILE = import.meta.env.VITE_DATA_FILE || '/data/ott-data.json';
+const BASE_URL = import.meta.env.BASE_URL || '/';
+const DATA_FILE = BASE_URL + 'data/ott-data.json';
 
 function App() {
   const [state, setState] = useState({
