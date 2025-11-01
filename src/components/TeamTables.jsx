@@ -9,8 +9,9 @@ function TeamTables({ homeSummary, awaySummary }) {
     <>
       {/* Home Teams Table - ALL TEAMS */}
       {homeSummary && homeSummary.length > 0 && (
-        <table>
-          <caption>טבלה 3: סיכום בית לפי קבוצה (כל הקבוצות)</caption>
+        <div className="table-container">
+          <table>
+            <caption>טבלה 3: סיכום בית לפי קבוצה (כל הקבוצות)</caption>
           <thead>
             <tr>
               <th className="sortable" onClick={() => requestHomeSort('league')}>
@@ -53,13 +54,15 @@ function TeamTables({ homeSummary, awaySummary }) {
               </tr>
             ))}
           </tbody>
-        </table>
+          </table>
+        </div>
       )}
 
       {/* Away Teams Table - ALL TEAMS */}
       {awaySummary && awaySummary.length > 0 && (
-        <table>
-          <caption>טבלה 4: סיכום חוץ לפי קבוצה (כל הקבוצות)</caption>
+        <div className="table-container">
+          <table>
+            <caption>טבלה 4: סיכום חוץ לפי קבוצה (כל הקבוצות)</caption>
           <thead>
             <tr>
               <th className="sortable" onClick={() => requestAwaySort('league')}>
@@ -102,7 +105,8 @@ function TeamTables({ homeSummary, awaySummary }) {
               </tr>
             ))}
           </tbody>
-        </table>
+          </table>
+        </div>
       )}
     </>
   );

@@ -11,8 +11,9 @@ function TopGames({ games, limit, title }) {
   const displayGames = limit ? items.slice(0, limit) : items;
 
   return (
-    <table>
-      <caption>{title}</caption>
+    <div className="table-container">
+      <table>
+        <caption>{title}</caption>
       <thead>
         <tr>
           <th className="sortable" onClick={() => requestSort('eventDate')}>
@@ -51,7 +52,8 @@ function TopGames({ games, limit, title }) {
           </tr>
         ))}
       </tbody>
-    </table>
+      </table>
+    </div>
   );
 }
 

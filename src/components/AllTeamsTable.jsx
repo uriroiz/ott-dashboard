@@ -9,8 +9,9 @@ function AllTeamsTable({ totalSummary }) {
   }
 
   return (
-    <table>
-      <caption>טבלה 2: טבלה כללית - כל הקבוצות</caption>
+    <div className="table-container">
+      <table>
+        <caption>טבלה 2: טבלה כללית - כל הקבוצות</caption>
       <thead>
         <tr>
           <th className="sortable" onClick={() => requestSort('league')}>
@@ -53,7 +54,8 @@ function AllTeamsTable({ totalSummary }) {
           </tr>
         ))}
       </tbody>
-    </table>
+      </table>
+    </div>
   );
 }
 

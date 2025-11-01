@@ -9,8 +9,9 @@ function LeagueTable({ leagueSummary }) {
   }
 
   return (
-    <table>
-      <caption>טבלה 1: סיכום לפי ליגה</caption>
+    <div className="table-container">
+      <table>
+        <caption>טבלה 1: סיכום לפי ליגה</caption>
       <thead>
         <tr>
           <th className="sortable" onClick={() => requestSort('league')}>
@@ -53,7 +54,8 @@ function LeagueTable({ leagueSummary }) {
           </tr>
         ))}
       </tbody>
-    </table>
+      </table>
+    </div>
   );
 }
 
