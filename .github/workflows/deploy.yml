@@ -35,6 +35,27 @@ jobs:
         env:
           VITE_PRODUCTION_MODE: 'true'
           VITE_DATA_FILE: '/data/ott-data.json'
+      
+      - name: Verify build output
+        run: |
+          echo "📁 Contents of dist/:"
+          ls -la dist/
+          echo ""
+          echo "📊 Checking data directory:"
+          if [ -d "dist/data" ]; then
+            echo "✅ dist/data/ exists"
+            ls -la dist/data/
+            if [ -f "dist/data/ott-data.json" ]; then
+              echo "✅ ott-data.json found!"
+              echo "File size: $(stat -f%z dist/data/ott-data.json 2>/dev/null || stat -c%s dist/data/ott-data.json)"
+            else
+              echo "❌ ott-data.json NOT found!"
+              exit 1
+            fi
+          else
+            echo "❌ dist/data/ directory does not exist!"
+            exit 1
+          fi
         
       - name: Setup Pages
         uses: actions/configure-pages@v4

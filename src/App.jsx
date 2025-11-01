@@ -18,8 +18,11 @@ import {
 
 // Check if we're in production mode (load from JSON instead of Excel)
 const PRODUCTION_MODE = import.meta.env.VITE_PRODUCTION_MODE === 'true';
-const BASE_URL = import.meta.env.BASE_URL || '/';
-const DATA_FILE = BASE_URL + 'data/ott-data.json';
+// For GitHub Pages: use absolute path with repo name
+// Vite's import.meta.env.BASE_URL will be '/ott-dashboard/' in production
+const DATA_FILE = import.meta.env.MODE === 'production' 
+  ? '/ott-dashboard/data/ott-data.json'
+  : '/data/ott-data.json';
 
 function App() {
   const [state, setState] = useState({
@@ -42,9 +45,16 @@ function App() {
     setState(prev => ({ ...prev, loading: true, error: null }));
 
     try {
+      console.log('🔍 Fetching data from:', DATA_FILE);
+      console.log('🔍 Production mode:', PRODUCTION_MODE);
+      console.log('🔍 Environment:', import.meta.env.MODE);
+      
       const response = await fetch(DATA_FILE);
+      
+      console.log('📡 Response status:', response.status, response.statusText);
+      
       if (!response.ok) {
-        throw new Error(`Failed to load data file: ${response.statusText}`);
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
 
       const jsonData = await response.json();
