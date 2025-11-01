@@ -61,6 +61,24 @@ function parseExcelDate(excelDate) {
   return null;
 }
 
+// Helper function to parse numbers that might have commas as thousands separators
+function parseNumber(value) {
+  if (value === null || value === undefined || value === '') return 0;
+  
+  // If it's already a number, return it
+  if (typeof value === 'number') return value;
+  
+  // If it's a string, remove commas and parse
+  if (typeof value === 'string') {
+    // Remove all commas (thousands separators)
+    const cleaned = value.replace(/,/g, '');
+    const parsed = parseFloat(cleaned);
+    return isNaN(parsed) ? 0 : parsed;
+  }
+  
+  return 0;
+}
+
 // Process raw Excel data
 export function processData(rawData) {
   const processedData = rawData.map(row => ({
@@ -68,10 +86,10 @@ export function processData(rawData) {
     eventDate: parseExcelDate(row['Event Date']),
     homeTeam: row['HomeTeam'] || '',
     awayTeam: row['AwayTeam'] || '',
-    views: parseFloat(row['Views']) || 0,
-    uniqueUsers: parseFloat(row['unique users']) || 0,
-    watchHours: parseFloat(row['Playtime Hours']) || 0,
-    productionHours: parseFloat(row['Production Hours']) || 0,
+    views: parseNumber(row['Views']),
+    uniqueUsers: parseNumber(row['unique users']),
+    watchHours: parseNumber(row['Playtime Hours']),
+    productionHours: parseNumber(row['Production Hours']),
     league: identifyLeague(row['eventname'])
   }));
 
