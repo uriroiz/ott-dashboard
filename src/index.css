@@ -138,6 +138,24 @@ table {
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
   border-radius: 8px;
   overflow: hidden;
+  /* Mobile: Allow horizontal scroll */
+  display: block;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+table thead,
+table tbody {
+  display: table;
+  width: 100%;
+}
+
+table tbody tr {
+  display: table-row;
+}
+
+table tbody td {
+  display: table-cell;
 }
 
 table caption {
@@ -226,17 +244,108 @@ tr:hover {
   border: 1px solid #fca5a5;
 }
 
+/* Mobile Responsive Styles */
 @media (max-width: 768px) {
-  .charts-grid {
-    grid-template-columns: 1fr;
-  }
-  
+  /* Container adjustments */
   .container {
     padding: 10px;
   }
   
+  /* Typography */
   h1 {
     font-size: 1.5em;
+  }
+  
+  .subtitle {
+    font-size: 0.9em;
+  }
+  
+  /* League tabs - stack vertically on mobile */
+  .league-tabs {
+    padding: 10px;
+    gap: 8px;
+  }
+  
+  .tab-button {
+    width: 100%;
+    padding: 12px 16px;
+    font-size: 16px; /* Larger for touch */
+    text-align: center;
+  }
+  
+  /* Charts grid - one per row */
+  .charts-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  
+  /* Card adjustments */
+  .card {
+    padding: 15px;
+    margin-bottom: 15px;
+  }
+  
+  /* Table wrapper for horizontal scroll */
+  table {
+    font-size: 13px;
+  }
+  
+  table caption {
+    font-size: 1.1em;
+    padding: 10px;
+  }
+  
+  th, td {
+    padding: 10px 6px;
+    white-space: nowrap;
+    font-size: 13px;
+  }
+  
+  th {
+    font-size: 12px;
+    position: sticky;
+    top: 0;
+    background: #f3f4f6;
+    z-index: 10;
+  }
+  
+  /* File upload */
+  .file-upload {
+    padding: 20px 10px;
+  }
+  
+  /* Loading and error messages */
+  .loading, .error {
+    font-size: 14px;
+    padding: 15px;
+  }
+  
+  /* Stats display */
+  .stats {
+    font-size: 14px;
+  }
+}
+
+/* Very small screens (phones in portrait) */
+@media (max-width: 480px) {
+  h1 {
+    font-size: 1.3em;
+    margin-bottom: 8px;
+  }
+  
+  .subtitle {
+    font-size: 0.85em;
+    margin-bottom: 20px;
+  }
+  
+  .tab-button {
+    font-size: 15px;
+    padding: 10px 12px;
+  }
+  
+  .card {
+    padding: 12px;
+    border-radius: 8px;
   }
   
   table {
@@ -245,6 +354,12 @@ tr:hover {
   
   th, td {
     padding: 8px 4px;
+    font-size: 12px;
+  }
+  
+  /* Make numbers more readable */
+  td {
+    min-width: 80px;
   }
 }
 
