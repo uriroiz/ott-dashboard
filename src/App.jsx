@@ -13,7 +13,8 @@ import {
   calculateLeagueSummary,
   calculateHomeSummary,
   calculateAwaySummary,
-  calculateTotalSummary
+  calculateTotalSummary,
+  leaguePatterns
 } from './utils/dataProcessor';
 
 // Check if we're in production mode (load from JSON instead of Excel)
@@ -23,6 +24,19 @@ const PRODUCTION_MODE = import.meta.env.VITE_PRODUCTION_MODE === 'true';
 const DATA_FILE = import.meta.env.MODE === 'production' 
   ? '/ott-dashboard/data/ott-data.json'
   : '/data/ott-data.json';
+
+// Sort leagues in the desired order
+function sortLeagues(leagues) {
+  const leagueOrder = Object.keys(leaguePatterns);
+  return leagues.sort((a, b) => {
+    const indexA = leagueOrder.indexOf(a);
+    const indexB = leagueOrder.indexOf(b);
+    // If league not in leagueOrder, put it at the end
+    if (indexA === -1) return 1;
+    if (indexB === -1) return -1;
+    return indexA - indexB;
+  });
+}
 
 function App() {
   const [state, setState] = useState({
@@ -72,7 +86,7 @@ function App() {
       }
 
       // Get unique leagues
-      const leagues = [...new Set(filteredData.map(item => item.league))].sort();
+      const leagues = sortLeagues([...new Set(filteredData.map(item => item.league))]);
 
       setState({
         loading: false,
@@ -113,7 +127,7 @@ function App() {
       }
 
       // Get unique leagues
-      const leagues = [...new Set(filteredData.map(item => item.league))].sort();
+      const leagues = sortLeagues([...new Set(filteredData.map(item => item.league))]);
 
       setState({
         loading: false,
@@ -161,11 +175,26 @@ function App() {
     ? '30 המשחקים הנצפים ביותר' 
     : `10 המשחקים הנצפים ביותר - ${state.activeLeague}`;
 
+  // Get the latest date from the data
+  const getLatestDate = () => {
+    if (!state.filteredData || state.filteredData.length === 0) return null;
+    const dates = state.filteredData
+      .map(item => item.eventDate)
+      .filter(date => date !== null)
+      .sort((a, b) => new Date(b) - new Date(a));
+    return dates.length > 0 ? dates[0] : null;
+  };
+
+  const latestDate = getLatestDate();
+  const dateString = latestDate 
+    ? new Date(latestDate).toLocaleDateString('he-IL', { year: 'numeric', month: 'long', day: 'numeric' })
+    : 'סוף אוקטובר 2025';
+
   return (
     <div className="container">
       <div className="card">
         <h1>דשבורד נתוני OTT - איגוד הכדורסל הישראלי</h1>
-        <p className="subtitle">מהתחלת העונה ועד סוף אוקטובר 2025</p>
+        <p className="subtitle">הנתונים נכונים עד {dateString}</p>
 
         {!PRODUCTION_MODE && <FileUpload onFileLoad={handleFileLoad} />}
 

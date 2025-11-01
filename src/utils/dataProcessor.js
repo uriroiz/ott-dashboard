@@ -1,11 +1,11 @@
-// League pattern matching
+// League pattern matching - ORDER MATTERS for display
 export const leaguePatterns = {
-  'ליגת אתנה ווינר': ['ליגת אתנה ווינר', 'ליגת אתנה וינר', 'אתנה ווינר', 'אתנה וינר'],
   'ליגה לאומית Winner': ['ליגה לאומית Winner', 'ליגה לאומית וינר', 'ליגה לאומית winner'],
-  'הליגה לנערים א לאומית': ['הליגה לנערים א לאומית', 'ליגה לנערים א לאומית', 'נערים א לאומית'],
-  'ליגת מקדונלד\'ס לנוער': ['ליגת מקדונלד\'ס לנוער', 'ליגת מקדונלדס לנוער', 'מקדונלד\'ס לנוער', 'מקדונלדס לנוער'],
+  'ליגת אתנה ווינר': ['ליגת אתנה ווינר', 'ליגת אתנה וינר', 'אתנה ווינר', 'אתנה וינר'],
   'הליגה הלאומית לנשים': ['הליגה הלאומית לנשים', 'ליגה לאומית לנשים', 'ליגה לנשים'],
-  'הליגה לנערות א על': ['הליגה לנערות א על', 'ליגה לנערות א על', 'נערות א על', 'ליגה לנערות א\' על']
+  'ליגת מקדונלד\'ס לנוער': ['ליגת מקדונלד\'ס לנוער', 'ליגת מקדונלדס לנוער', 'מקדונלד\'ס לנוער', 'מקדונלדס לנוער'],
+  'הליגה לנערות א על': ['הליגה לנערות א על', 'ליגה לנערות א על', 'נערות א על', 'ליגה לנערות א\' על'],
+  'הליגה לנערים א לאומית': ['הליגה לנערים א לאומית', 'ליגה לנערים א לאומית', 'נערים א לאומית']
 };
 
 // Identify league from event name
@@ -112,6 +112,9 @@ export function calculateLeagueSummary(data) {
     grouped[event.league].push(event);
   });
 
+  // Define league order
+  const leagueOrder = Object.keys(leaguePatterns);
+
   return Object.entries(grouped).map(([league, events]) => {
     const totalViews = events.reduce((sum, e) => sum + e.views, 0);
     const totalUsers = events.reduce((sum, e) => sum + e.uniqueUsers, 0);
@@ -129,7 +132,15 @@ export function calculateLeagueSummary(data) {
       avgUsersPerEvent: Math.round(totalUsers / events.length),
       avgWatchHours: Math.round((totalWatchHours / events.length) * 10) / 10
     };
-  }).sort((a, b) => b.totalViews - a.totalViews);
+  }).sort((a, b) => {
+    // Sort by league order from leaguePatterns
+    const indexA = leagueOrder.indexOf(a.league);
+    const indexB = leagueOrder.indexOf(b.league);
+    // If league not in order, put it at the end
+    if (indexA === -1) return 1;
+    if (indexB === -1) return -1;
+    return indexA - indexB;
+  });
 }
 
 // Calculate home team summary
@@ -141,6 +152,8 @@ export function calculateHomeSummary(data) {
     grouped[key].games.push(event);
   });
 
+  const leagueOrder = Object.keys(leaguePatterns);
+
   return Object.values(grouped).map(item => {
     const totalViews = item.games.reduce((sum, g) => sum + g.views, 0);
     const totalUsers = item.games.reduce((sum, g) => sum + g.uniqueUsers, 0);
@@ -157,7 +170,17 @@ export function calculateHomeSummary(data) {
       avgViewsPerGame: Math.round(totalViews / gamesCount),
       avgUsersPerGame: Math.round(totalUsers / gamesCount)
     };
-  }).sort((a, b) => b.views - a.views);
+  }).sort((a, b) => {
+    // Sort by league order first, then by views
+    const indexA = leagueOrder.indexOf(a.league);
+    const indexB = leagueOrder.indexOf(b.league);
+    if (indexA !== indexB) {
+      if (indexA === -1) return 1;
+      if (indexB === -1) return -1;
+      return indexA - indexB;
+    }
+    return b.views - a.views;
+  });
 }
 
 // Calculate away team summary
@@ -169,6 +192,8 @@ export function calculateAwaySummary(data) {
     grouped[key].games.push(event);
   });
 
+  const leagueOrder = Object.keys(leaguePatterns);
+
   return Object.values(grouped).map(item => {
     const totalViews = item.games.reduce((sum, g) => sum + g.views, 0);
     const totalUsers = item.games.reduce((sum, g) => sum + g.uniqueUsers, 0);
@@ -185,7 +210,17 @@ export function calculateAwaySummary(data) {
       avgViewsPerGame: Math.round(totalViews / gamesCount),
       avgUsersPerGame: Math.round(totalUsers / gamesCount)
     };
-  }).sort((a, b) => b.views - a.views);
+  }).sort((a, b) => {
+    // Sort by league order first, then by views
+    const indexA = leagueOrder.indexOf(a.league);
+    const indexB = leagueOrder.indexOf(b.league);
+    if (indexA !== indexB) {
+      if (indexA === -1) return 1;
+      if (indexB === -1) return -1;
+      return indexA - indexB;
+    }
+    return b.views - a.views;
+  });
 }
 
 // Calculate total team summary (home + away) - NO DUPLICATION
@@ -202,6 +237,8 @@ export function calculateTotalSummary(data) {
     grouped[awayKey].games.push(event);
   });
 
+  const leagueOrder = Object.keys(leaguePatterns);
+
   return Object.values(grouped).map(item => {
     const totalViews = item.games.reduce((sum, g) => sum + g.views, 0);
     const totalUsers = item.games.reduce((sum, g) => sum + g.uniqueUsers, 0);
@@ -218,6 +255,16 @@ export function calculateTotalSummary(data) {
       avgViewsPerGame: Math.round(totalViews / gamesCount),
       avgUsersPerGame: Math.round(totalUsers / gamesCount)
     };
-  }).sort((a, b) => b.views - a.views);
+  }).sort((a, b) => {
+    // Sort by league order first, then by views
+    const indexA = leagueOrder.indexOf(a.league);
+    const indexB = leagueOrder.indexOf(b.league);
+    if (indexA !== indexB) {
+      if (indexA === -1) return 1;
+      if (indexB === -1) return -1;
+      return indexA - indexB;
+    }
+    return b.views - a.views;
+  });
 }
 
