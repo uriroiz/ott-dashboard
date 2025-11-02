@@ -19,10 +19,9 @@ import {
 
 // Check if we're in production mode (load from JSON instead of Excel)
 const PRODUCTION_MODE = import.meta.env.VITE_PRODUCTION_MODE === 'true';
-// For GitHub Pages: use absolute path with repo name
-// Vite's import.meta.env.BASE_URL will be '/ott-dashboard/' in production
+// Use BASE_URL which automatically adjusts for Vercel (/) vs GitHub Pages (/ott-dashboard/)
 const DATA_FILE = import.meta.env.MODE === 'production' 
-  ? '/ott-dashboard/data/ott-data.json'
+  ? `${import.meta.env.BASE_URL}data/ott-data.json`
   : '/data/ott-data.json';
 
 // Sort leagues in the desired order
