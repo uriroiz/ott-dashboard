@@ -33,7 +33,9 @@ function PasswordProtection({ children }) {
   };
 
   if (loading) {
-    return null; // or a loading spinner
+    return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+      <div>טוען...</div>
+    </div>;
   }
 
   if (!isAuthenticated) {
