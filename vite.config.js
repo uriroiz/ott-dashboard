@@ -3,7 +3,8 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
-  base: '/ott-dashboard/', // Will be updated by publish script to match your repo name
+  // Use '/' for Vercel, '/ott-dashboard/' for GitHub Pages
+  base: process.env.VERCEL ? '/' : '/ott-dashboard/',
   server: {
     port: 3000,
     open: true
