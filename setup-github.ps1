@@ -172,3 +172,4 @@ Write-Host "⏱️ המתן 2-3 דקות לסיום הבנייה" -ForegroundCol
 Write-Host ""
 Read-Host "לחץ Enter לסיום"
 
+

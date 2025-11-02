@@ -123,3 +123,4 @@ eventname | Event Date | HomeTeam | AwayTeam | Views | unique users | Playtime H
 
 **שים לב:** הדשבורד מסנן אוטומטית רק נתונים מ-6 הליגות המפורטות למעלה ועד תאריך 31/10/2025.
 
+

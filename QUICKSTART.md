@@ -80,3 +80,4 @@ npm run dev
 
 **טיפ:** שמור את הקובץ `setup.bat` ו-`start.bat` בשולחן העבודה להפעלה מהירה! 🎯
 
+

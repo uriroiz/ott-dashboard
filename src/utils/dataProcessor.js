@@ -99,7 +99,7 @@ export function processData(rawData) {
   return processedData.filter(row => {
     const hasLeague = row.league && relevantLeagues.includes(row.league);
     const validDate = !row.eventDate || row.eventDate <= cutoffDate;
-    const hasValidData = row.views >= 0 && row.uniqueUsers >= 0;
+    const hasValidData = row.views >= 5 && row.uniqueUsers >= 0; // Filter out events with less than 5 views
     return hasLeague && validDate && hasValidData;
   });
 }

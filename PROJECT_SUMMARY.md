@@ -218,3 +218,4 @@ npm run dev
 **מפתח:** Cursor AI + User  
 **רישיון:** Private / Internal Use
 
+
