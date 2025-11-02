@@ -16,6 +16,21 @@
 - 🎨 עיצוב מודרני ומותאם לעברית (RTL)
 - 📱 Responsive - מותאם למובייל וטאבלט
 
+## 🔒 פריסה מאובטחת (Vercel)
+
+**רוצה לפרוס עם הגנת סיסמה?**
+
+המערכת כוללת תמיכה מלאה ב-Vercel עם middleware להגנת סיסמה:
+
+- 🔐 הגנת סיסמה אמיתית (server-side)
+- 🎨 דף כניסה מעוצב בעברית
+- 🚀 פריסה אוטומטית מ-GitHub
+- 💰 חינמי לחלוטין
+
+**📖 ראה [VERCEL_SETUP.md](VERCEL_SETUP.md) למדריך מפורט**
+
+---
+
 ## 🚀 שימוש
 
 ### שני מצבים:
