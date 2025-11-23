@@ -6,7 +6,7 @@ export default defineConfig({
   // Use '/' for Vercel, '/ott-dashboard/' for GitHub Pages
   base: process.env.VERCEL ? '/' : '/ott-dashboard/',
   server: {
-    port: 3000,
+    port: 4000,
     open: true
   },
   build: {
