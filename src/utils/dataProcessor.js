@@ -93,7 +93,7 @@ export function processData(rawData) {
     league: identifyLeague(row['eventname'])
   }));
 
-  const cutoffDate = new Date('2025-10-31T23:59:59');
+  const cutoffDate = new Date('2025-11-30T23:59:59');
   const relevantLeagues = Object.keys(leaguePatterns);
 
   return processedData.filter(row => {
