@@ -22,6 +22,20 @@ export function identifyLeague(eventName) {
   return null;
 }
 
+// Extract round number from event name
+export function extractRound(eventName) {
+  if (!eventName) return null;
+  
+  // Search for patterns like: "מחזור 4", "מחזור 12", etc.
+  const roundMatch = eventName.match(/מחזור\s+(\d+)/);
+  
+  if (roundMatch && roundMatch[1]) {
+    return parseInt(roundMatch[1]);
+  }
+  
+  return null;
+}
+
 // Parse Excel date to JavaScript Date
 function parseExcelDate(excelDate) {
   if (!excelDate) return null;
@@ -90,7 +104,8 @@ export function processData(rawData) {
     uniqueUsers: parseNumber(row['unique users']),
     watchHours: parseNumber(row['Playtime Hours']),
     productionHours: parseNumber(row['Production Hours']),
-    league: identifyLeague(row['eventname'])
+    league: identifyLeague(row['eventname']),
+    round: extractRound(row['eventname'])
   }));
 
   const cutoffDate = new Date('2025-11-30T23:59:59');

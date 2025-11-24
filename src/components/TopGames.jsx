@@ -22,6 +22,9 @@ function TopGames({ games, limit, title }) {
           <th className="sortable" onClick={() => requestSort('league')}>
             ליגה{getSortIndicator('league')}
           </th>
+          <th className="sortable" onClick={() => requestSort('round')}>
+            מחזור{getSortIndicator('round')}
+          </th>
           <th className="sortable" onClick={() => requestSort('homeTeam')}>
             קבוצת בית{getSortIndicator('homeTeam')}
           </th>
@@ -44,6 +47,7 @@ function TopGames({ games, limit, title }) {
           <tr key={idx}>
             <td>{game.eventDate ? new Date(game.eventDate).toLocaleDateString('he-IL') : '-'}</td>
             <td>{game.league}</td>
+            <td>{game.round !== null && game.round !== undefined ? game.round : '-'}</td>
             <td>{game.homeTeam}</td>
             <td>{game.awayTeam}</td>
             <td>{game.views.toLocaleString('he-IL')}</td>
