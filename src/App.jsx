@@ -243,7 +243,7 @@ function App() {
               awaySummary={awaySummary}
             />
 
-            <Notes />
+            <Notes latestDateString={dateString} />
           </>
         )}
       </div>
