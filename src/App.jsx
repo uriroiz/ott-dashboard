@@ -3,6 +3,7 @@ import * as XLSX from 'xlsx';
 import FileUpload from './components/FileUpload';
 import LeagueTabs from './components/LeagueTabs';
 import Charts from './components/Charts';
+import MonthlyProgressChart from './components/MonthlyProgressChart';
 import LeagueTable from './components/LeagueTable';
 import AllTeamsTable from './components/AllTeamsTable';
 import TeamTables from './components/TeamTables';
@@ -14,6 +15,7 @@ import {
   calculateHomeSummary,
   calculateAwaySummary,
   calculateTotalSummary,
+  calculateMonthlyProgress,
   leaguePatterns
 } from './utils/dataProcessor';
 
@@ -161,6 +163,7 @@ function App() {
   const homeSummary = currentData ? calculateHomeSummary(currentData) : null;
   const awaySummary = currentData ? calculateAwaySummary(currentData) : null;
   const totalSummary = currentData ? calculateTotalSummary(currentData) : null;
+  const monthlyProgress = currentData ? calculateMonthlyProgress(currentData) : null;
   
   // Get top games sorted by views
   const getTopGames = () => {
@@ -227,6 +230,13 @@ function App() {
               leagueSummary={leagueSummary} 
               showCharts={state.activeLeague === 'all'} 
             />
+
+            {state.activeLeague !== 'all' && (
+              <MonthlyProgressChart 
+                monthlyData={monthlyProgress}
+                leagueName={state.activeLeague}
+              />
+            )}
 
             <LeagueTable leagueSummary={leagueSummary} />
 

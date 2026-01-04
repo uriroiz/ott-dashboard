@@ -283,3 +283,87 @@ export function calculateTotalSummary(data) {
   });
 }
 
+// Hebrew month names for display
+const hebrewMonths = [
+  'ינו׳', 'פבר׳', 'מרץ', 'אפר׳', 'מאי', 'יוני',
+  'יולי', 'אוג׳', 'ספט׳', 'אוק׳', 'נוב׳', 'דצמ׳'
+];
+
+// Calculate monthly progress for views and users
+export function calculateMonthlyProgress(data) {
+  if (!data || data.length === 0) return [];
+
+  const grouped = {};
+
+  data.forEach(event => {
+    if (!event.eventDate) return;
+
+    const date = new Date(event.eventDate);
+    const year = date.getFullYear();
+    const month = date.getMonth(); // 0-indexed
+    const key = `${year}-${String(month).padStart(2, '0')}`;
+
+    if (!grouped[key]) {
+      grouped[key] = {
+        year,
+        month,
+        monthLabel: `${hebrewMonths[month]} ${String(year).slice(-2)}`,
+        totalViews: 0,
+        totalUsers: 0,
+        eventsCount: 0
+      };
+    }
+
+    grouped[key].totalViews += event.views;
+    grouped[key].totalUsers += event.uniqueUsers;
+    grouped[key].eventsCount += 1;
+  });
+
+  // Sort chronologically
+  const sorted = Object.values(grouped).sort((a, b) => {
+    if (a.year !== b.year) return a.year - b.year;
+    return a.month - b.month;
+  });
+
+  // Calculate averages and percentage changes
+  return sorted.map((item, index) => {
+    const avgViewsPerGame = Math.round(item.totalViews / item.eventsCount);
+    const avgUsersPerGame = Math.round(item.totalUsers / item.eventsCount);
+
+    // Calculate percentage change from previous month
+    let viewsChange = null;
+    let usersChange = null;
+    let avgViewsChange = null;
+    let avgUsersChange = null;
+
+    if (index > 0) {
+      const prev = sorted[index - 1];
+      const prevAvgViews = prev.totalViews / prev.eventsCount;
+      const prevAvgUsers = prev.totalUsers / prev.eventsCount;
+
+      viewsChange = prev.totalViews > 0 
+        ? ((item.totalViews - prev.totalViews) / prev.totalViews * 100).toFixed(1)
+        : null;
+      usersChange = prev.totalUsers > 0 
+        ? ((item.totalUsers - prev.totalUsers) / prev.totalUsers * 100).toFixed(1)
+        : null;
+      avgViewsChange = prevAvgViews > 0 
+        ? ((avgViewsPerGame - prevAvgViews) / prevAvgViews * 100).toFixed(1)
+        : null;
+      avgUsersChange = prevAvgUsers > 0 
+        ? ((avgUsersPerGame - prevAvgUsers) / prevAvgUsers * 100).toFixed(1)
+        : null;
+    }
+
+    return {
+      ...item,
+      avgViewsPerGame,
+      avgUsersPerGame,
+      viewsChange: viewsChange !== null ? parseFloat(viewsChange) : null,
+      usersChange: usersChange !== null ? parseFloat(usersChange) : null,
+      avgViewsChange: avgViewsChange !== null ? parseFloat(avgViewsChange) : null,
+      avgUsersChange: avgUsersChange !== null ? parseFloat(avgUsersChange) : null
+    };
+  });
+}
+
