@@ -13,10 +13,11 @@ build/
 .env.local
 .env.*.local
 
-# Data files - keep example, ignore actual data
+# Data files - keep example and production data
 public/data/*.json
 !public/data/.gitkeep
 !public/data/example.json
+!public/data/ott-data.json
 
 # Excel source files
 *.xlsx
