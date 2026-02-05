@@ -108,7 +108,7 @@ export function processData(rawData) {
     round: extractRound(row['eventname'])
   }));
 
-  const cutoffDate = new Date('2025-12-31T23:59:59');
+  const cutoffDate = new Date('2026-01-31T23:59:59');
   const relevantLeagues = Object.keys(leaguePatterns);
 
   return processedData.filter(row => {
