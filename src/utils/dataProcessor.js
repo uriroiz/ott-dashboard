@@ -366,4 +366,3 @@ export function calculateMonthlyProgress(data) {
     };
   });
 }
-
