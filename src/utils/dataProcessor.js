@@ -22,9 +22,20 @@ export function identifyLeague(eventName) {
   return null;
 }
 
-// Extract round number from event name
+// Extract round from event name:
+// - Regular season: "מחזור 7" -> 7
+// - Playoffs/stages: "חצי גמר - משחק 1" -> "חצי גמר - משחק 1"
 export function extractRound(eventName) {
   if (!eventName) return null;
+
+  const stagePatterns = ['בית עליון', 'בית תחתון', 'רבע גמר', 'חצי גמר', 'גמר'];
+  for (const stage of stagePatterns) {
+    const stageRegex = new RegExp(`${stage}\\s*-\\s*משחק\\s*\\d+`);
+    const stageMatch = eventName.match(stageRegex);
+    if (stageMatch && stageMatch[0]) {
+      return stageMatch[0].trim();
+    }
+  }
   
   // Search for patterns like: "מחזור 4", "מחזור 12", etc.
   const roundMatch = eventName.match(/מחזור\s+(\d+)/);
