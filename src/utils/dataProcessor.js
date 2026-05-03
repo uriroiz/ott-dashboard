@@ -108,14 +108,12 @@ export function processData(rawData) {
     round: extractRound(row['eventname'])
   }));
 
-  const cutoffDate = new Date('2026-01-31T23:59:59');
   const relevantLeagues = Object.keys(leaguePatterns);
 
   return processedData.filter(row => {
     const hasLeague = row.league && relevantLeagues.includes(row.league);
-    const validDate = !row.eventDate || row.eventDate <= cutoffDate;
     const hasValidData = row.views >= 5 && row.uniqueUsers >= 0; // Filter out events with less than 5 views
-    return hasLeague && validDate && hasValidData;
+    return hasLeague && hasValidData;
   });
 }
 
