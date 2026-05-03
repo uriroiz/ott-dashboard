@@ -28,8 +28,17 @@ export function identifyLeague(eventName) {
 export function extractRound(eventName) {
   if (!eventName) return null;
 
-  const stagePatterns = ['בית עליון', 'בית תחתון', 'רבע גמר', 'חצי גמר', 'גמר'];
-  for (const stage of stagePatterns) {
+  const upperLowerHousePatterns = ['בית עליון', 'בית תחתון'];
+  for (const stage of upperLowerHousePatterns) {
+    const stageRegex = new RegExp(`${stage}\\s*-\\s*מחזור\\s*\\d+`);
+    const stageMatch = eventName.match(stageRegex);
+    if (stageMatch && stageMatch[0]) {
+      return stageMatch[0].trim();
+    }
+  }
+
+  const playoffPatterns = ['רבע גמר', 'חצי גמר', 'גמר'];
+  for (const stage of playoffPatterns) {
     const stageRegex = new RegExp(`${stage}\\s*-\\s*משחק\\s*\\d+`);
     const stageMatch = eventName.match(stageRegex);
     if (stageMatch && stageMatch[0]) {
