@@ -48,6 +48,8 @@ function App() {
     activeLeague: 'all',
     leagues: []
   });
+  const [searchQuery, setSearchQuery] = useState('');
+  const [activeMonth, setActiveMonth] = useState('all');
 
   // Load data from JSON in production mode
   useEffect(() => {
@@ -151,12 +153,57 @@ function App() {
     setState(prev => ({ ...prev, activeLeague: league }));
   };
 
+  const getMonthKey = (dateValue) => {
+    if (!dateValue) return null;
+    const date = new Date(dateValue);
+    if (isNaN(date.getTime())) return null;
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+  };
+
+  const getMonthLabel = (monthKey) => {
+    const [year, month] = monthKey.split('-');
+    const date = new Date(Number(year), Number(month) - 1, 1);
+    return date.toLocaleDateString('he-IL', { year: 'numeric', month: 'long' });
+  };
+
   // Filter data based on active league
   const getFilteredData = () => {
     if (!state.filteredData) return null;
-    if (state.activeLeague === 'all') return state.filteredData;
-    return state.filteredData.filter(item => item.league === state.activeLeague);
+    let result = state.filteredData;
+
+    if (state.activeLeague !== 'all') {
+      result = result.filter(item => item.league === state.activeLeague);
+    }
+
+    if (activeMonth !== 'all') {
+      result = result.filter(item => getMonthKey(item.eventDate) === activeMonth);
+    }
+
+    const query = searchQuery.trim().toLowerCase();
+    if (query) {
+      result = result.filter(item => {
+        const fields = [
+          item.eventName,
+          item.homeTeam,
+          item.awayTeam,
+          item.league,
+          item.round != null ? String(item.round) : ''
+        ];
+        return fields.some(value => String(value || '').toLowerCase().includes(query));
+      });
+    }
+
+    return result;
   };
+
+  const monthOptions = React.useMemo(() => {
+    if (!state.filteredData) return [];
+    const source = state.activeLeague === 'all'
+      ? state.filteredData
+      : state.filteredData.filter(item => item.league === state.activeLeague);
+    const keys = [...new Set(source.map(item => getMonthKey(item.eventDate)).filter(Boolean))];
+    return keys.sort((a, b) => b.localeCompare(a));
+  }, [state.filteredData, state.activeLeague]);
 
   const currentData = getFilteredData();
   const leagueSummary = currentData ? calculateLeagueSummary(currentData) : null;
@@ -219,6 +266,28 @@ function App() {
               activeLeague={state.activeLeague}
               onLeagueChange={handleLeagueChange}
             />
+
+            <div className="filters-bar">
+              <input
+                type="text"
+                className="filter-input"
+                placeholder="חיפוש משחק, קבוצה, ליגה או מחזור..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              <select
+                className="filter-select"
+                value={activeMonth}
+                onChange={(e) => setActiveMonth(e.target.value)}
+              >
+                <option value="all">כל החודשים</option>
+                {monthOptions.map((monthKey) => (
+                  <option key={monthKey} value={monthKey}>
+                    {getMonthLabel(monthKey)}
+                  </option>
+                ))}
+              </select>
+            </div>
 
             <p className="subtitle">
               {currentData.length} אירועים
