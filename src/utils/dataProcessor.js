@@ -13,6 +13,74 @@ export const competitionDisplayOrder = [
   'הליגה הלאומית לנערים ב'
 ];
 
+export const teamFrameworkDisplayOrder = [
+  'לאומית גברים',
+  'נשים על',
+  'נשים לאומית',
+  'נוער',
+  'נערים א',
+  'נערים ב',
+  'נערות א',
+  'נערות ב',
+  'ילדים / Jr. NBA',
+  'ילדות / Jr. WNBA',
+  'גברים - אחר'
+];
+
+export const teamFrameworkByCompetition = {
+  'ליגה לאומית Winner': 'לאומית גברים',
+  'גביע הליגה הלאומית': 'לאומית גברים',
+  'ליגת אתנה ווינר': 'נשים על',
+  'גביע המדינה לנשים': 'נשים על',
+  'הליגה הלאומית לנשים': 'נשים לאומית',
+  'גביע האיגוד לנשים': 'נשים לאומית',
+  'ליגת מקדונלד\'ס לנוער': 'נוער',
+  'גביע המדינה לנוער': 'נוער',
+  'הליגה לנערים א לאומית': 'נערים א',
+  'גביע המדינה לנערים א': 'נערים א',
+  'גביע האיגוד לנערים א': 'נערים א',
+  'הליגה הלאומית לנערים ב': 'נערים ב',
+  'גביע המדינה לנערים ב': 'נערים ב',
+  'הליגה לנערות א על': 'נערות א',
+  'גביע המדינה לנערות א': 'נערות א',
+  'הליגה לנערות ב על': 'נערות ב',
+  'גביע המדינה לנערות ב': 'נערות ב',
+  'Jr. NBA': 'ילדים / Jr. NBA',
+  'גביע המדינה לילדים': 'ילדים / Jr. NBA',
+  'Jr. WNBA': 'ילדות / Jr. WNBA',
+  'גביע המדינה לילדות': 'ילדות / Jr. WNBA',
+  'גביע המדינה לילדות א': 'ילדות / Jr. WNBA',
+  'גביע האיגוד לגברים': 'גברים - אחר',
+  'גביע האיגוד ליגה ב\' לגברים': 'גברים - אחר'
+};
+
+const sourceCompetitionDisplayOrder = [
+  'ליגה לאומית Winner',
+  'גביע הליגה הלאומית',
+  'ליגת אתנה ווינר',
+  'גביע המדינה לנשים',
+  'הליגה הלאומית לנשים',
+  'גביע האיגוד לנשים',
+  'ליגת מקדונלד\'ס לנוער',
+  'גביע המדינה לנוער',
+  'הליגה לנערים א לאומית',
+  'גביע המדינה לנערים א',
+  'גביע האיגוד לנערים א',
+  'הליגה הלאומית לנערים ב',
+  'גביע המדינה לנערים ב',
+  'הליגה לנערות א על',
+  'גביע המדינה לנערות א',
+  'הליגה לנערות ב על',
+  'גביע המדינה לנערות ב',
+  'Jr. NBA',
+  'גביע המדינה לילדים',
+  'Jr. WNBA',
+  'גביע המדינה לילדות',
+  'גביע המדינה לילדות א',
+  'גביע האיגוד לגברים',
+  'גביע האיגוד ליגה ב\' לגברים'
+];
+
 const excludedCompetitionNames = new Set([
   'ילדות א דרום נבא',
   'ילדים א מרכז נבא',
@@ -30,6 +98,16 @@ function getCompetitionSortIndex(competition) {
   return index === -1 ? Number.MAX_SAFE_INTEGER : index;
 }
 
+function getFrameworkSortIndex(framework) {
+  const index = teamFrameworkDisplayOrder.indexOf(framework);
+  return index === -1 ? Number.MAX_SAFE_INTEGER : index;
+}
+
+function getSourceCompetitionSortIndex(competition) {
+  const index = sourceCompetitionDisplayOrder.indexOf(competition);
+  return index === -1 ? Number.MAX_SAFE_INTEGER : index;
+}
+
 export function compareCompetitions(a, b) {
   const indexA = getCompetitionSortIndex(a);
   const indexB = getCompetitionSortIndex(b);
@@ -41,8 +119,29 @@ export function compareCompetitions(a, b) {
   return a.localeCompare(b, 'he');
 }
 
-// Identify league/competition from event name
-export function identifyLeague(eventName) {
+export function compareTeamFrameworks(a, b) {
+  const indexA = getFrameworkSortIndex(a);
+  const indexB = getFrameworkSortIndex(b);
+
+  if (indexA !== indexB) {
+    return indexA - indexB;
+  }
+
+  return a.localeCompare(b, 'he');
+}
+
+function compareSourceCompetitions(a, b) {
+  const indexA = getSourceCompetitionSortIndex(a);
+  const indexB = getSourceCompetitionSortIndex(b);
+
+  if (indexA !== indexB) {
+    return indexA - indexB;
+  }
+
+  return a.localeCompare(b, 'he');
+}
+
+export function identifySourceCompetition(eventName) {
   if (!eventName) return null;
 
   const parts = String(eventName).trim().split(competitionSeparatorPattern);
@@ -55,11 +154,30 @@ export function identifyLeague(eventName) {
     return null;
   }
 
+  return competition;
+}
+
+function mapCompetitionToCategory(competition) {
+  if (!competition) return null;
+
   if (competition.startsWith('גביע')) {
     return 'גביעים';
   }
 
   return competition;
+}
+
+export function identifyLeague(eventName) {
+  return mapCompetitionToCategory(identifySourceCompetition(eventName));
+}
+
+export function identifyTeamFramework(sourceCompetition) {
+  if (!sourceCompetition) return null;
+  return teamFrameworkByCompetition[sourceCompetition] || sourceCompetition;
+}
+
+function getCompetitionsLabel(competitions) {
+  return [...competitions].sort(compareSourceCompetitions).join(', ');
 }
 
 // Extract round from event name:
@@ -155,19 +273,25 @@ function parseNumber(value) {
 
 // Process raw Excel data
 export function processData(rawData) {
-  const processedData = rawData.map((row, index) => ({
-    eventName: row['eventname'] || '',
-    eventDate: parseExcelDate(row['Event Date']),
-    homeTeam: row['HomeTeam'] || '',
-    awayTeam: row['AwayTeam'] || '',
-    views: parseNumber(row['Views']),
-    uniqueUsers: parseNumber(row['unique users']),
-    watchHours: parseNumber(row['Playtime Hours']),
-    productionHours: parseNumber(row['Production Hours']),
-    league: identifyLeague(row['eventname']),
-    round: extractRound(row['eventname']),
-    sourceRow: index + 2
-  }));
+  const processedData = rawData.map((row, index) => {
+    const sourceCompetition = identifySourceCompetition(row['eventname']);
+
+    return {
+      eventName: row['eventname'] || '',
+      eventDate: parseExcelDate(row['Event Date']),
+      homeTeam: row['HomeTeam'] || '',
+      awayTeam: row['AwayTeam'] || '',
+      views: parseNumber(row['Views']),
+      uniqueUsers: parseNumber(row['unique users']),
+      watchHours: parseNumber(row['Playtime Hours']),
+      productionHours: parseNumber(row['Production Hours']),
+      league: mapCompetitionToCategory(sourceCompetition),
+      sourceCompetition,
+      teamFramework: identifyTeamFramework(sourceCompetition),
+      round: extractRound(row['eventname']),
+      sourceRow: index + 2
+    };
+  });
 
   return processedData.filter(row => {
     const hasLeague = Boolean(row.league);
@@ -231,8 +355,16 @@ export function calculateLeagueSummaryTotals(leagueSummary) {
 export function calculateHomeSummary(data) {
   const grouped = {};
   data.forEach(event => {
-    const key = `${event.league}|||${event.homeTeam}`;
-    if (!grouped[key]) grouped[key] = { league: event.league, team: event.homeTeam, games: [] };
+    const key = `${event.teamFramework}|||${event.homeTeam}`;
+    if (!grouped[key]) {
+      grouped[key] = {
+        teamFramework: event.teamFramework,
+        team: event.homeTeam,
+        competitions: new Set(),
+        games: []
+      };
+    }
+    grouped[key].competitions.add(event.sourceCompetition);
     grouped[key].games.push(event);
   });
 
@@ -243,7 +375,8 @@ export function calculateHomeSummary(data) {
     const gamesCount = item.games.length;
 
     return {
-      league: item.league,
+      teamFramework: item.teamFramework,
+      competitionsLabel: getCompetitionsLabel(item.competitions),
       team: item.team,
       games: gamesCount,
       views: Math.round(totalViews),
@@ -253,8 +386,8 @@ export function calculateHomeSummary(data) {
       avgUsersPerGame: Math.round(totalUsers / gamesCount)
     };
   }).sort((a, b) => {
-    const leagueCompare = compareCompetitions(a.league, b.league);
-    if (leagueCompare !== 0) return leagueCompare;
+    const frameworkCompare = compareTeamFrameworks(a.teamFramework, b.teamFramework);
+    if (frameworkCompare !== 0) return frameworkCompare;
     return b.views - a.views;
   });
 }
@@ -263,8 +396,16 @@ export function calculateHomeSummary(data) {
 export function calculateAwaySummary(data) {
   const grouped = {};
   data.forEach(event => {
-    const key = `${event.league}|||${event.awayTeam}`;
-    if (!grouped[key]) grouped[key] = { league: event.league, team: event.awayTeam, games: [] };
+    const key = `${event.teamFramework}|||${event.awayTeam}`;
+    if (!grouped[key]) {
+      grouped[key] = {
+        teamFramework: event.teamFramework,
+        team: event.awayTeam,
+        competitions: new Set(),
+        games: []
+      };
+    }
+    grouped[key].competitions.add(event.sourceCompetition);
     grouped[key].games.push(event);
   });
 
@@ -275,7 +416,8 @@ export function calculateAwaySummary(data) {
     const gamesCount = item.games.length;
 
     return {
-      league: item.league,
+      teamFramework: item.teamFramework,
+      competitionsLabel: getCompetitionsLabel(item.competitions),
       team: item.team,
       games: gamesCount,
       views: Math.round(totalViews),
@@ -285,8 +427,8 @@ export function calculateAwaySummary(data) {
       avgUsersPerGame: Math.round(totalUsers / gamesCount)
     };
   }).sort((a, b) => {
-    const leagueCompare = compareCompetitions(a.league, b.league);
-    if (leagueCompare !== 0) return leagueCompare;
+    const frameworkCompare = compareTeamFrameworks(a.teamFramework, b.teamFramework);
+    if (frameworkCompare !== 0) return frameworkCompare;
     return b.views - a.views;
   });
 }
@@ -296,12 +438,28 @@ export function calculateTotalSummary(data) {
   const grouped = {};
   
   data.forEach(event => {
-    const homeKey = `${event.league}|||${event.homeTeam}`;
-    if (!grouped[homeKey]) grouped[homeKey] = { league: event.league, team: event.homeTeam, games: [] };
+    const homeKey = `${event.teamFramework}|||${event.homeTeam}`;
+    if (!grouped[homeKey]) {
+      grouped[homeKey] = {
+        teamFramework: event.teamFramework,
+        team: event.homeTeam,
+        competitions: new Set(),
+        games: []
+      };
+    }
+    grouped[homeKey].competitions.add(event.sourceCompetition);
     grouped[homeKey].games.push(event);
 
-    const awayKey = `${event.league}|||${event.awayTeam}`;
-    if (!grouped[awayKey]) grouped[awayKey] = { league: event.league, team: event.awayTeam, games: [] };
+    const awayKey = `${event.teamFramework}|||${event.awayTeam}`;
+    if (!grouped[awayKey]) {
+      grouped[awayKey] = {
+        teamFramework: event.teamFramework,
+        team: event.awayTeam,
+        competitions: new Set(),
+        games: []
+      };
+    }
+    grouped[awayKey].competitions.add(event.sourceCompetition);
     grouped[awayKey].games.push(event);
   });
 
@@ -312,7 +470,8 @@ export function calculateTotalSummary(data) {
     const gamesCount = item.games.length;
 
     return {
-      league: item.league,
+      teamFramework: item.teamFramework,
+      competitionsLabel: getCompetitionsLabel(item.competitions),
       team: item.team,
       games: gamesCount,
       views: Math.round(totalViews),
@@ -322,8 +481,8 @@ export function calculateTotalSummary(data) {
       avgUsersPerGame: Math.round(totalUsers / gamesCount)
     };
   }).sort((a, b) => {
-    const leagueCompare = compareCompetitions(a.league, b.league);
-    if (leagueCompare !== 0) return leagueCompare;
+    const frameworkCompare = compareTeamFrameworks(a.teamFramework, b.teamFramework);
+    if (frameworkCompare !== 0) return frameworkCompare;
     return b.views - a.views;
   });
 }

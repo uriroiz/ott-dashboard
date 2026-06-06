@@ -1,5 +1,6 @@
 import React from 'react';
 import { useSortableTable } from '../hooks/useSortableTable';
+import CollapsibleSection from './CollapsibleSection';
 
 function TeamTables({ homeSummary, awaySummary }) {
   const { items: homeItems, requestSort: requestHomeSort, getSortIndicator: getHomeSortIndicator } = useSortableTable(homeSummary);
@@ -9,13 +10,17 @@ function TeamTables({ homeSummary, awaySummary }) {
     <>
       {/* Home Teams Table - ALL TEAMS */}
       {homeSummary && homeSummary.length > 0 && (
-        <div className="table-container">
-          <table>
-            <caption>טבלה 3: סיכום בית לפי קבוצה (כל הקבוצות)</caption>
+        <CollapsibleSection title="טבלה 3: סיכום בית לפי קבוצה (כל הקבוצות)">
+          <div className="table-container">
+            <table>
+              <caption>טבלה 3: סיכום בית לפי קבוצה (כל הקבוצות)</caption>
           <thead>
             <tr>
-              <th className="sortable" onClick={() => requestHomeSort('league')}>
-                ליגה/תחרות{getHomeSortIndicator('league')}
+              <th className="sortable" onClick={() => requestHomeSort('teamFramework')}>
+                מסגרת{getHomeSortIndicator('teamFramework')}
+              </th>
+              <th className="sortable" onClick={() => requestHomeSort('competitionsLabel')}>
+                תחרויות{getHomeSortIndicator('competitionsLabel')}
               </th>
               <th className="sortable" onClick={() => requestHomeSort('team')}>
                 קבוצה{getHomeSortIndicator('team')}
@@ -43,7 +48,8 @@ function TeamTables({ homeSummary, awaySummary }) {
           <tbody>
             {homeItems.map((row, idx) => (
               <tr key={idx}>
-                <td>{row.league}</td>
+                <td>{row.teamFramework}</td>
+                <td>{row.competitionsLabel}</td>
                 <td>{row.team}</td>
                 <td>{row.games.toLocaleString('he-IL')}</td>
                 <td>{row.views.toLocaleString('he-IL')}</td>
@@ -54,19 +60,24 @@ function TeamTables({ homeSummary, awaySummary }) {
               </tr>
             ))}
           </tbody>
-          </table>
-        </div>
+            </table>
+          </div>
+        </CollapsibleSection>
       )}
 
       {/* Away Teams Table - ALL TEAMS */}
       {awaySummary && awaySummary.length > 0 && (
-        <div className="table-container">
-          <table>
-            <caption>טבלה 4: סיכום חוץ לפי קבוצה (כל הקבוצות)</caption>
+        <CollapsibleSection title="טבלה 4: סיכום חוץ לפי קבוצה (כל הקבוצות)">
+          <div className="table-container">
+            <table>
+              <caption>טבלה 4: סיכום חוץ לפי קבוצה (כל הקבוצות)</caption>
           <thead>
             <tr>
-              <th className="sortable" onClick={() => requestAwaySort('league')}>
-                ליגה/תחרות{getAwaySortIndicator('league')}
+              <th className="sortable" onClick={() => requestAwaySort('teamFramework')}>
+                מסגרת{getAwaySortIndicator('teamFramework')}
+              </th>
+              <th className="sortable" onClick={() => requestAwaySort('competitionsLabel')}>
+                תחרויות{getAwaySortIndicator('competitionsLabel')}
               </th>
               <th className="sortable" onClick={() => requestAwaySort('team')}>
                 קבוצה{getAwaySortIndicator('team')}
@@ -94,7 +105,8 @@ function TeamTables({ homeSummary, awaySummary }) {
           <tbody>
             {awayItems.map((row, idx) => (
               <tr key={idx}>
-                <td>{row.league}</td>
+                <td>{row.teamFramework}</td>
+                <td>{row.competitionsLabel}</td>
                 <td>{row.team}</td>
                 <td>{row.games.toLocaleString('he-IL')}</td>
                 <td>{row.views.toLocaleString('he-IL')}</td>
@@ -105,8 +117,9 @@ function TeamTables({ homeSummary, awaySummary }) {
               </tr>
             ))}
           </tbody>
-          </table>
-        </div>
+            </table>
+          </div>
+        </CollapsibleSection>
       )}
     </>
   );

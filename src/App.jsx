@@ -9,6 +9,7 @@ import AllTeamsTable from './components/AllTeamsTable';
 import TeamTables from './components/TeamTables';
 import TopGames from './components/TopGames';
 import Notes from './components/Notes';
+import CollapsibleSection from './components/CollapsibleSection';
 import {
   processData,
   calculateLeagueSummary,
@@ -299,18 +300,24 @@ function App() {
               />
             )}
 
-            <LeagueTable
-              leagueSummary={leagueSummary}
-              showTotals={state.activeLeague === 'all'}
-            />
+            <CollapsibleSection title="טבלה 1: סיכום לפי ליגה/תחרות" defaultOpen>
+              <LeagueTable
+                leagueSummary={leagueSummary}
+                showTotals={state.activeLeague === 'all'}
+              />
+            </CollapsibleSection>
 
-            <TopGames 
-              games={topGames}
-              limit={topGamesLimit}
-              title={topGamesTitle}
-            />
+            <CollapsibleSection title={topGamesTitle}>
+              <TopGames 
+                games={topGames}
+                limit={topGamesLimit}
+                title={topGamesTitle}
+              />
+            </CollapsibleSection>
 
-            <AllTeamsTable totalSummary={totalSummary} />
+            <CollapsibleSection title="טבלה 2: טבלה כללית - כל הקבוצות">
+              <AllTeamsTable totalSummary={totalSummary} />
+            </CollapsibleSection>
 
             <TeamTables
               homeSummary={homeSummary}

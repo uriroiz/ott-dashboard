@@ -160,6 +160,66 @@ h1 {
   margin-bottom: 40px;
 }
 
+.collapsible-section {
+  margin-bottom: 18px;
+  border: 1px solid #dbeafe;
+  border-radius: 8px;
+  background: white;
+  overflow: hidden;
+}
+
+.collapsible-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  background: #eff6ff;
+  color: #1e40af;
+  cursor: pointer;
+  font-weight: 700;
+  user-select: none;
+}
+
+.collapsible-summary::-webkit-details-marker {
+  display: none;
+}
+
+.collapsible-toggle::before {
+  content: '+';
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  background: #dbeafe;
+  color: #1e40af;
+  font-weight: 700;
+}
+
+.collapsible-section[open] .collapsible-toggle::before {
+  content: '-';
+}
+
+.collapsible-content {
+  padding: 16px;
+}
+
+.collapsible-content .table-container {
+  margin-bottom: 0;
+  box-shadow: none;
+}
+
+.collapsible-content table caption {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
 .section-title {
   font-size: 1.4em;
   font-weight: bold;
@@ -305,9 +365,10 @@ th {
   white-space: nowrap;
 }
 
-/* Right align text columns (league, team names) */
+/* Right align text columns (framework, competitions, team names) */
 th:first-child,
-th:nth-child(2) {
+th:nth-child(2),
+th:nth-child(3) {
   text-align: right;
 }
 
@@ -328,9 +389,10 @@ td {
   text-align: center; /* Center align data by default */
 }
 
-/* Right align text columns (league, team names) */
+/* Right align text columns (framework, competitions, team names) */
 td:first-child,
-td:nth-child(2) {
+td:nth-child(2),
+td:nth-child(3) {
   text-align: right;
 }
 

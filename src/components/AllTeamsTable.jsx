@@ -14,8 +14,11 @@ function AllTeamsTable({ totalSummary }) {
         <caption>טבלה 2: טבלה כללית - כל הקבוצות</caption>
       <thead>
         <tr>
-          <th className="sortable" onClick={() => requestSort('league')}>
-            ליגה/תחרות{getSortIndicator('league')}
+          <th className="sortable" onClick={() => requestSort('teamFramework')}>
+            מסגרת{getSortIndicator('teamFramework')}
+          </th>
+          <th className="sortable" onClick={() => requestSort('competitionsLabel')}>
+            תחרויות{getSortIndicator('competitionsLabel')}
           </th>
           <th className="sortable" onClick={() => requestSort('team')}>
             קבוצה{getSortIndicator('team')}
@@ -43,7 +46,8 @@ function AllTeamsTable({ totalSummary }) {
       <tbody>
         {items.map((row, idx) => (
           <tr key={idx}>
-            <td>{row.league}</td>
+            <td>{row.teamFramework}</td>
+            <td>{row.competitionsLabel}</td>
             <td>{row.team}</td>
             <td>{row.games.toLocaleString('he-IL')}</td>
             <td>{row.views.toLocaleString('he-IL')}</td>
