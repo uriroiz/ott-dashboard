@@ -205,6 +205,28 @@ export function calculateLeagueSummary(data) {
   }).sort((a, b) => compareCompetitions(a.league, b.league) || b.events - a.events);
 }
 
+export function calculateLeagueSummaryTotals(leagueSummary) {
+  if (!leagueSummary || leagueSummary.length === 0) {
+    return null;
+  }
+
+  const events = leagueSummary.reduce((sum, row) => sum + row.events, 0);
+  const totalViews = leagueSummary.reduce((sum, row) => sum + row.totalViews, 0);
+  const totalUsers = leagueSummary.reduce((sum, row) => sum + row.totalUsers, 0);
+  const watchHours = leagueSummary.reduce((sum, row) => sum + row.watchHours, 0);
+
+  return {
+    league: 'סה״כ',
+    events,
+    totalViews,
+    totalUsers,
+    watchHours: Math.round(watchHours * 10) / 10,
+    avgViewsPerEvent: Math.round(totalViews / events),
+    avgUsersPerEvent: Math.round(totalUsers / events),
+    avgWatchHours: Math.round((watchHours / events) * 10) / 10
+  };
+}
+
 // Calculate home team summary
 export function calculateHomeSummary(data) {
   const grouped = {};

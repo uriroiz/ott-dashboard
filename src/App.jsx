@@ -299,7 +299,10 @@ function App() {
               />
             )}
 
-            <LeagueTable leagueSummary={leagueSummary} />
+            <LeagueTable
+              leagueSummary={leagueSummary}
+              showTotals={state.activeLeague === 'all'}
+            />
 
             <TopGames 
               games={topGames}

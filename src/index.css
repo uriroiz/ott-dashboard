@@ -342,6 +342,20 @@ tr:hover {
   background: #f3f4f6;
 }
 
+tfoot .summary-row {
+  background: #ecfdf5;
+  font-weight: 700;
+}
+
+tfoot .summary-row td {
+  border-top: 2px solid #10b981;
+  border-bottom: none;
+}
+
+tfoot .summary-row:hover {
+  background: #d1fae5;
+}
+
 .notes {
   background: #fef3c7;
   padding: 20px;

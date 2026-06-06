@@ -1,8 +1,10 @@
 import React from 'react';
 import { useSortableTable } from '../hooks/useSortableTable';
+import { calculateLeagueSummaryTotals } from '../utils/dataProcessor';
 
-function LeagueTable({ leagueSummary }) {
+function LeagueTable({ leagueSummary, showTotals = false }) {
   const { items, requestSort, getSortIndicator } = useSortableTable(leagueSummary);
+  const totals = showTotals ? calculateLeagueSummaryTotals(leagueSummary) : null;
 
   if (!leagueSummary || leagueSummary.length === 0) {
     return null;
@@ -54,6 +56,20 @@ function LeagueTable({ leagueSummary }) {
           </tr>
         ))}
       </tbody>
+      {totals && (
+        <tfoot>
+          <tr className="summary-row">
+            <td>{totals.league}</td>
+            <td>{totals.events.toLocaleString('he-IL')}</td>
+            <td>{totals.totalViews.toLocaleString('he-IL')}</td>
+            <td>{totals.totalUsers.toLocaleString('he-IL')}</td>
+            <td>{totals.watchHours.toLocaleString('he-IL')}</td>
+            <td>{totals.avgViewsPerEvent.toLocaleString('he-IL')}</td>
+            <td>{totals.avgUsersPerEvent.toLocaleString('he-IL')}</td>
+            <td>{totals.avgWatchHours.toLocaleString('he-IL')}</td>
+          </tr>
+        </tfoot>
+      )}
       </table>
     </div>
   );
