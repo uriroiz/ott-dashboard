@@ -16,7 +16,7 @@ import {
   calculateAwaySummary,
   calculateTotalSummary,
   calculateMonthlyProgress,
-  leaguePatterns
+  compareCompetitions
 } from './utils/dataProcessor';
 
 // Check if we're in production mode (load from JSON instead of Excel)
@@ -28,15 +28,7 @@ const DATA_FILE = import.meta.env.MODE === 'production'
 
 // Sort leagues in the desired order
 function sortLeagues(leagues) {
-  const leagueOrder = Object.keys(leaguePatterns);
-  return leagues.sort((a, b) => {
-    const indexA = leagueOrder.indexOf(a);
-    const indexB = leagueOrder.indexOf(b);
-    // If league not in leagueOrder, put it at the end
-    if (indexA === -1) return 1;
-    if (indexB === -1) return -1;
-    return indexA - indexB;
-  });
+  return leagues.sort(compareCompetitions);
 }
 
 function App() {
@@ -271,7 +263,7 @@ function App() {
               <input
                 type="text"
                 className="filter-input"
-                placeholder="חיפוש משחק, קבוצה, ליגה או מחזור..."
+                placeholder="חיפוש משחק, קבוצה, ליגה/תחרות או מחזור..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />

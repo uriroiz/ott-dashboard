@@ -20,7 +20,7 @@ function TopGames({ games, limit, title }) {
             תאריך{getSortIndicator('eventDate')}
           </th>
           <th className="sortable" onClick={() => requestSort('league')}>
-            ליגה{getSortIndicator('league')}
+            ליגה/תחרות{getSortIndicator('league')}
           </th>
           <th className="sortable" onClick={() => requestSort('round')}>
             מחזור{getSortIndicator('round')}
@@ -62,4 +62,3 @@ function TopGames({ games, limit, title }) {
 }
 
 export default TopGames;
-

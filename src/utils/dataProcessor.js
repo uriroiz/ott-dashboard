@@ -1,25 +1,65 @@
-// League pattern matching - ORDER MATTERS for display
-export const leaguePatterns = {
-  'ליגה לאומית Winner': ['ליגה לאומית Winner', 'ליגה לאומית וינר', 'ליגה לאומית winner'],
-  'ליגת אתנה ווינר': ['ליגת אתנה ווינר', 'ליגת אתנה וינר', 'אתנה ווינר', 'אתנה וינר'],
-  'הליגה הלאומית לנשים': ['הליגה הלאומית לנשים', 'ליגה לאומית לנשים', 'ליגה לנשים'],
-  'ליגת מקדונלד\'ס לנוער': ['ליגת מקדונלד\'ס לנוער', 'ליגת מקדונלדס לנוער', 'מקדונלד\'ס לנוער', 'מקדונלדס לנוער'],
-  'הליגה לנערות א על': ['הליגה לנערות א על', 'ליגה לנערות א על', 'נערות א על', 'ליגה לנערות א\' על'],
-  'הליגה לנערים א לאומית': ['הליגה לנערים א לאומית', 'ליגה לנערים א לאומית', 'נערים א לאומית']
-};
+// Competition display order. Competitions not listed here are sorted after these.
+export const competitionDisplayOrder = [
+  'ליגה לאומית Winner',
+  'ליגת אתנה ווינר',
+  'הליגה הלאומית לנשים',
+  'ליגת מקדונלד\'ס לנוער',
+  'הליגה לנערות א על',
+  'הליגה לנערים א לאומית',
+  'Jr. NBA',
+  'Jr. WNBA',
+  'גביעים',
+  'הליגה לנערות ב על',
+  'הליגה הלאומית לנערים ב'
+];
 
-// Identify league from event name
+const excludedCompetitionNames = new Set([
+  'ילדות א דרום נבא',
+  'ילדים א מרכז נבא',
+  'לאומית נשים',
+  'משחק אימון',
+  'נערים א לאומית צפון'
+]);
+
+const excludedExcelRows = new Set([441, 589, 1448]);
+
+const competitionSeparatorPattern = /\s+[-–—]\s+/;
+
+function getCompetitionSortIndex(competition) {
+  const index = competitionDisplayOrder.indexOf(competition);
+  return index === -1 ? Number.MAX_SAFE_INTEGER : index;
+}
+
+export function compareCompetitions(a, b) {
+  const indexA = getCompetitionSortIndex(a);
+  const indexB = getCompetitionSortIndex(b);
+
+  if (indexA !== indexB) {
+    return indexA - indexB;
+  }
+
+  return a.localeCompare(b, 'he');
+}
+
+// Identify league/competition from event name
 export function identifyLeague(eventName) {
   if (!eventName) return null;
-  
-  for (const [leagueName, patterns] of Object.entries(leaguePatterns)) {
-    for (const pattern of patterns) {
-      if (eventName.includes(pattern)) {
-        return leagueName;
-      }
-    }
+
+  const parts = String(eventName).trim().split(competitionSeparatorPattern);
+  if (parts.length < 2 || !parts[0]) {
+    return null;
   }
-  return null;
+
+  const competition = parts[0].trim();
+  if (excludedCompetitionNames.has(competition)) {
+    return null;
+  }
+
+  if (competition.startsWith('גביע')) {
+    return 'גביעים';
+  }
+
+  return competition;
 }
 
 // Extract round from event name:
@@ -115,7 +155,7 @@ function parseNumber(value) {
 
 // Process raw Excel data
 export function processData(rawData) {
-  const processedData = rawData.map(row => ({
+  const processedData = rawData.map((row, index) => ({
     eventName: row['eventname'] || '',
     eventDate: parseExcelDate(row['Event Date']),
     homeTeam: row['HomeTeam'] || '',
@@ -125,15 +165,15 @@ export function processData(rawData) {
     watchHours: parseNumber(row['Playtime Hours']),
     productionHours: parseNumber(row['Production Hours']),
     league: identifyLeague(row['eventname']),
-    round: extractRound(row['eventname'])
+    round: extractRound(row['eventname']),
+    sourceRow: index + 2
   }));
 
-  const relevantLeagues = Object.keys(leaguePatterns);
-
   return processedData.filter(row => {
-    const hasLeague = row.league && relevantLeagues.includes(row.league);
-    const hasValidData = row.views >= 5 && row.uniqueUsers >= 0; // Filter out events with less than 5 views
-    return hasLeague && hasValidData;
+    const hasLeague = Boolean(row.league);
+    const hasValidData = row.views >= 30 && row.uniqueUsers >= 0;
+    const isExcludedRow = excludedExcelRows.has(row.sourceRow);
+    return hasLeague && hasValidData && !isExcludedRow;
   });
 }
 
@@ -144,9 +184,6 @@ export function calculateLeagueSummary(data) {
     if (!grouped[event.league]) grouped[event.league] = [];
     grouped[event.league].push(event);
   });
-
-  // Define league order
-  const leagueOrder = Object.keys(leaguePatterns);
 
   return Object.entries(grouped).map(([league, events]) => {
     const totalViews = events.reduce((sum, e) => sum + e.views, 0);
@@ -165,15 +202,7 @@ export function calculateLeagueSummary(data) {
       avgUsersPerEvent: Math.round(totalUsers / events.length),
       avgWatchHours: Math.round((totalWatchHours / events.length) * 10) / 10
     };
-  }).sort((a, b) => {
-    // Sort by league order from leaguePatterns
-    const indexA = leagueOrder.indexOf(a.league);
-    const indexB = leagueOrder.indexOf(b.league);
-    // If league not in order, put it at the end
-    if (indexA === -1) return 1;
-    if (indexB === -1) return -1;
-    return indexA - indexB;
-  });
+  }).sort((a, b) => compareCompetitions(a.league, b.league) || b.events - a.events);
 }
 
 // Calculate home team summary
@@ -184,8 +213,6 @@ export function calculateHomeSummary(data) {
     if (!grouped[key]) grouped[key] = { league: event.league, team: event.homeTeam, games: [] };
     grouped[key].games.push(event);
   });
-
-  const leagueOrder = Object.keys(leaguePatterns);
 
   return Object.values(grouped).map(item => {
     const totalViews = item.games.reduce((sum, g) => sum + g.views, 0);
@@ -204,14 +231,8 @@ export function calculateHomeSummary(data) {
       avgUsersPerGame: Math.round(totalUsers / gamesCount)
     };
   }).sort((a, b) => {
-    // Sort by league order first, then by views
-    const indexA = leagueOrder.indexOf(a.league);
-    const indexB = leagueOrder.indexOf(b.league);
-    if (indexA !== indexB) {
-      if (indexA === -1) return 1;
-      if (indexB === -1) return -1;
-      return indexA - indexB;
-    }
+    const leagueCompare = compareCompetitions(a.league, b.league);
+    if (leagueCompare !== 0) return leagueCompare;
     return b.views - a.views;
   });
 }
@@ -225,8 +246,6 @@ export function calculateAwaySummary(data) {
     grouped[key].games.push(event);
   });
 
-  const leagueOrder = Object.keys(leaguePatterns);
-
   return Object.values(grouped).map(item => {
     const totalViews = item.games.reduce((sum, g) => sum + g.views, 0);
     const totalUsers = item.games.reduce((sum, g) => sum + g.uniqueUsers, 0);
@@ -244,14 +263,8 @@ export function calculateAwaySummary(data) {
       avgUsersPerGame: Math.round(totalUsers / gamesCount)
     };
   }).sort((a, b) => {
-    // Sort by league order first, then by views
-    const indexA = leagueOrder.indexOf(a.league);
-    const indexB = leagueOrder.indexOf(b.league);
-    if (indexA !== indexB) {
-      if (indexA === -1) return 1;
-      if (indexB === -1) return -1;
-      return indexA - indexB;
-    }
+    const leagueCompare = compareCompetitions(a.league, b.league);
+    if (leagueCompare !== 0) return leagueCompare;
     return b.views - a.views;
   });
 }
@@ -270,8 +283,6 @@ export function calculateTotalSummary(data) {
     grouped[awayKey].games.push(event);
   });
 
-  const leagueOrder = Object.keys(leaguePatterns);
-
   return Object.values(grouped).map(item => {
     const totalViews = item.games.reduce((sum, g) => sum + g.views, 0);
     const totalUsers = item.games.reduce((sum, g) => sum + g.uniqueUsers, 0);
@@ -289,14 +300,8 @@ export function calculateTotalSummary(data) {
       avgUsersPerGame: Math.round(totalUsers / gamesCount)
     };
   }).sort((a, b) => {
-    // Sort by league order first, then by views
-    const indexA = leagueOrder.indexOf(a.league);
-    const indexB = leagueOrder.indexOf(b.league);
-    if (indexA !== indexB) {
-      if (indexA === -1) return 1;
-      if (indexB === -1) return -1;
-      return indexA - indexB;
-    }
+    const leagueCompare = compareCompetitions(a.league, b.league);
+    if (leagueCompare !== 0) return leagueCompare;
     return b.views - a.views;
   });
 }

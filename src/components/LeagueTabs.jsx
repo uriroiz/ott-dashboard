@@ -11,7 +11,7 @@ function LeagueTabs({ leagues, activeLeague, onLeagueChange }) {
         className={`tab-button ${activeLeague === 'all' ? 'active' : ''}`}
         onClick={() => onLeagueChange('all')}
       >
-        כל הליגות
+        כל התחרויות
       </button>
       {leagues.map((league) => (
         <button

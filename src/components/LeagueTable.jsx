@@ -11,11 +11,11 @@ function LeagueTable({ leagueSummary }) {
   return (
     <div className="table-container">
       <table>
-        <caption>טבלה 1: סיכום לפי ליגה</caption>
+        <caption>טבלה 1: סיכום לפי ליגה/תחרות</caption>
       <thead>
         <tr>
           <th className="sortable" onClick={() => requestSort('league')}>
-            ליגה{getSortIndicator('league')}
+            ליגה/תחרות{getSortIndicator('league')}
           </th>
           <th className="sortable" onClick={() => requestSort('events')}>
             אירועים{getSortIndicator('events')}

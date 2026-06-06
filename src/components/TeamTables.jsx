@@ -15,7 +15,7 @@ function TeamTables({ homeSummary, awaySummary }) {
           <thead>
             <tr>
               <th className="sortable" onClick={() => requestHomeSort('league')}>
-                ליגה{getHomeSortIndicator('league')}
+                ליגה/תחרות{getHomeSortIndicator('league')}
               </th>
               <th className="sortable" onClick={() => requestHomeSort('team')}>
                 קבוצה{getHomeSortIndicator('team')}
@@ -66,7 +66,7 @@ function TeamTables({ homeSummary, awaySummary }) {
           <thead>
             <tr>
               <th className="sortable" onClick={() => requestAwaySort('league')}>
-                ליגה{getAwaySortIndicator('league')}
+                ליגה/תחרות{getAwaySortIndicator('league')}
               </th>
               <th className="sortable" onClick={() => requestAwaySort('team')}>
                 קבוצה{getAwaySortIndicator('team')}

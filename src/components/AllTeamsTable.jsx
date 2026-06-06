@@ -15,7 +15,7 @@ function AllTeamsTable({ totalSummary }) {
       <thead>
         <tr>
           <th className="sortable" onClick={() => requestSort('league')}>
-            ליגה{getSortIndicator('league')}
+            ליגה/תחרות{getSortIndicator('league')}
           </th>
           <th className="sortable" onClick={() => requestSort('team')}>
             קבוצה{getSortIndicator('team')}
@@ -60,4 +60,3 @@ function AllTeamsTable({ totalSummary }) {
 }
 
 export default AllTeamsTable;
-

@@ -90,17 +90,17 @@ function Charts({ leagueSummary, showCharts }) {
   return (
     <div className="charts-grid">
       <div className="chart-container">
-        <div className="chart-title">צפיות ומשתמשים לפי ליגה</div>
+        <div className="chart-title">צפיות ומשתמשים לפי ליגה/תחרות</div>
         <Bar data={viewsUsersData} options={chartOptions} />
       </div>
       
       <div className="chart-container">
-        <div className="chart-title">שעות צפייה לפי ליגה</div>
+        <div className="chart-title">שעות צפייה לפי ליגה/תחרות</div>
         <Bar data={watchHoursData} options={chartOptions} />
       </div>
       
       <div className="chart-container full-width">
-        <div className="chart-title">ממוצע צפיות למשחק לפי ליגה</div>
+        <div className="chart-title">ממוצע צפיות למשחק לפי ליגה/תחרות</div>
         <Bar data={avgViewsPerEventData} options={chartOptions} />
       </div>
     </div>
